@@ -1,0 +1,169 @@
+<div class="dashboard-container">
+  <h1 class="page-title">Thống kê</h1>
+
+  <div class="top-cards">
+    <!-- Card 1: Dữ liệu cảm biến gần nhất -->
+    <div class="info-card sensor-card">
+      <div class="card-header">
+        <h3>📊 Dữ liệu cảm biến</h3>
+        <button class="btn-view-more" onclick="viewAllSensorData()">Xem tất cả →</button>
+      </div>
+      <div class="card-content">
+        <div class="recent-count">
+          <span class="count-number" id="sensorDataCount">0</span>
+          <span class="count-label">bản ghi hôm nay</span>
+        </div>
+        <div class="recent-logs" id="recentSensorLogs">
+          <!-- Render bằng JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Cảnh báo vượt ngưỡng -->
+    <div class="info-card notification-card">
+      <div class="card-header">
+        <h3>🔔 Cảnh báo</h3>
+        <button class="btn-view-more" onclick="viewAllNotifications()">Xem tất cả →</button>
+      </div>
+      <div class="card-content">
+        <div class="recent-count">
+          <span class="count-number alert" id="notificationCount">0</span>
+          <span class="count-label">cảnh báo chưa đọc</span>
+        </div>
+        <div class="recent-logs" id="recentNotifications">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thông số hôm nay -->
+  <div class="stats-section">
+    <h2 class="section-title">Thông số hôm nay</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon temp">🌡️</div>
+        <div class="stat-info">
+          <span class="stat-label">Nhiệt độ TB</span>
+          <span class="stat-value" id="avgTemp">--°C</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon humidity">💧</div>
+        <div class="stat-info">
+          <span class="stat-label">Độ ẩm TB</span>
+          <span class="stat-value" id="avgHumidity">--%</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon light">💡</div>
+        <div class="stat-info">
+          <span class="stat-label">Ánh sáng TB</span>
+          <span class="stat-value" id="avgLight">-- lux</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon soil">🌱</div>
+        <div class="stat-info">
+          <span class="stat-label">Độ ẩm đất TB</span>
+          <span class="stat-value" id="avgSoil">--%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Biểu đồ nhiệt độ trong tuần -->
+  <div class="chart-section">
+    <h2 class="section-title">Nhiệt độ trong tuần</h2>
+    <div class="chart-container">
+      <canvas id="tempChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xem tất cả dữ liệu cảm biến -->
+<div class="modal" id="sensorDataModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>📊 Tất cả dữ liệu cảm biến</h2>
+      <button class="modal-close" onclick="closeModal('sensorDataModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-filters">
+        <select id="sensorTypeFilter">
+          <option value="">Tất cả loại cảm biến</option>
+          <option value="temp">Nhiệt độ</option>
+          <option value="humidity">Độ ẩm</option>
+          <option value="light">Ánh sáng</option>
+          <option value="soil_moisture">Độ ẩm đất</option>
+        </select>
+        <select id="farmFilter">
+          <option value="">Tất cả nhà kính</option>
+          <option value="1">Nhà kính A</option>
+          <option value="2">Nhà kính B</option>
+        </select>
+      </div>
+      <div class="modal-table-container">
+        <table class="modal-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nhà kính</th>
+              <th>Loại cảm biến</th>
+              <th>Giá trị</th>
+              <th>Thời gian</th>
+            </tr>
+          </thead>
+          <tbody id="sensorDataTableBody">
+            <!-- Render bằng JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xem tất cả cảnh báo -->
+<div class="modal" id="notificationsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>🔔 Tất cả cảnh báo</h2>
+      <button class="modal-close" onclick="closeModal('notificationsModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-filters">
+        <select id="notifTypeFilter">
+          <option value="">Tất cả loại cảm biến</option>
+          <option value="temp">Nhiệt độ</option>
+          <option value="humidity">Độ ẩm</option>
+          <option value="light">Ánh sáng</option>
+          <option value="soil_moisture">Độ ẩm đất</option>
+        </select>
+        <select id="notifStatusFilter">
+          <option value="">Tất cả trạng thái</option>
+          <option value="unread">Chưa đọc</option>
+          <option value="read">Đã đọc</option>
+        </select>
+      </div>
+      <div class="modal-table-container">
+        <table class="modal-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nhà kính</th>
+              <th>Loại cảm biến</th>
+              <th>Giá trị</th>
+              <th>Loại ngưỡng</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="notificationsTableBody">
+            <!-- Render bằng JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
