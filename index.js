@@ -2,6 +2,7 @@ const pages = {
   'dashboard': 'pages/Dashboard/dashboard.html',
   'devices': 'pages/Devices/devices.html',
   'schedule': 'pages/Schedule/schedule.html',
+  'threshold': 'pages/Threshold/threshold.html',
   'profile': 'pages/Profile/profile.html'
 };
 
@@ -18,7 +19,6 @@ async function loadPage(pagePath, routeName) {
     const html = await res.text();
     document.getElementById("content").innerHTML = html;
 
-    // Xóa CSS/JS cũ
     document.getElementById("page-style")?.remove();
     document.getElementById("page-script")?.remove();
 

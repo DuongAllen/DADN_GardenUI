@@ -1,2 +1,116 @@
-<h2>Lịch trình</h2>
-<p>Hiển thị kế hoạch sắp tới.</p>
+<div class="schedule-container">
+  <h1>Lập lịch cho thiết bị</h1>
+
+  <div class="schedule-header">
+    <div class="row g-2 mb-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="searchDevice" placeholder="Tìm kiếm thiết bị...">
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" id="filterDeviceType">
+          <option value="">Tất cả loại</option>
+          <option value="fan">Quạt</option>
+          <option value="led">Đèn</option>
+          <option value="pump">Bơm nước</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" id="filterFarm">
+          <option value="">Tất cả nhà kính</option>
+          <option value="1">Nhà kính A</option>
+          <option value="2">Nhà kính B</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <div class="total-info text-center">
+          Tổng: <strong id="totalDevices">0</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="devices-grid" id="devicesGrid">
+  </div>
+
+  <div id="emptyState" class="empty-state" style="display: none;">
+    <p>Không tìm thấy thiết bị nào</p>
+  </div>
+</div>
+
+<div class="modal" id="scheduleModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Thêm lịch hoạt động</h5>
+        <button type="button" class="btn-close" onclick="closeScheduleModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form id="scheduleForm">
+          <input type="hidden" id="scheduleId">
+          <input type="hidden" id="deviceId">
+          
+          <div class="mb-3">
+            <label class="form-label">Thiết bị</label>
+            <input type="text" class="form-control" id="deviceName" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Ngày trong tuần <span class="text-danger">*</span></label>
+            <div class="days-selector">
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="0">
+                <span>T2</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="1">
+                <span>T3</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="2">
+                <span>T4</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="3">
+                <span>T5</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="4">
+                <span>T6</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="5">
+                <span>T7</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="day" value="6">
+                <span>CN</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label">Giờ bắt đầu <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="startHour" min="0" max="23" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Phút bắt đầu <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="startMinute" min="0" max="59" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Thời gian hoạt động (phút) <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="duration" min="1" required>
+            <small class="form-text text-muted">Nhập số phút thiết bị sẽ hoạt động</small>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-secondary flex-fill" onclick="closeScheduleModal()">Hủy</button>
+            <button type="submit" class="btn btn-primary flex-fill">Lưu lịch</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
