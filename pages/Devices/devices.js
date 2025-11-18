@@ -1,7 +1,7 @@
 (() => {
   let allDevices = [];
   let currentPage = 1;
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
 
   const mockDevices = [
     { id: 1, name: "Quạt phòng khách", description: "Quạt làm mát tự động", feed_name: "fan-livingroom", type: "fan", farm_name: "Nhà kính A", status: "on" },
@@ -13,6 +13,11 @@
   ];
 
   const typeNames = { fan: "Quạt", led: "Đèn", pump: "Bơm nước" };
+  const typeBadges = { 
+    fan: "primary", 
+    led: "warning", 
+    pump: "success" 
+  };
 
   function initDevicesPage() {
     loadDevices();
@@ -50,48 +55,60 @@
     if (devices.length === 0) {
       tbody.innerHTML = "";
       cardsContainer.innerHTML = "";
-      emptyState.style.display = "block";
+      emptyState.classList.remove("d-none");
       return;
     }
-    emptyState.style.display = "none";
+    emptyState.classList.add("d-none");
 
     // Table (desktop)
     tbody.innerHTML = devices.map(d => `
-    <tr>
-      <td>#${d.id}</td>
-      <td><strong>${d.name}</strong></td>
-      <td>${typeNames[d.type]}</td>
-      <td>${d.description || "<em>Không có mô tả</em>"}</td>
-      <td><code>${d.feed_name}</code></td>
-      <td>${d.farm_name}</td>
-      <td><span class="status-badge status-${d.status}">${d.status === "on" ? "Bật" : "Tắt"}</span></td>
-      <td>
-        <button class="btn-toggle" onclick="toggleDevice(${d.id}, '${d.status}')">${d.status === "on" ? "Tắt" : "Bật"}</button>
-        <button class="btn-delete" onclick="deleteDevice(${d.id}, '${d.name}')">Xóa</button>
-      </td>
-    </tr>
-  `).join("");
+      <tr>
+        <td><strong>#${d.id}</strong></td>
+        <td>${d.name}</td>
+        <td><span class="badge bg-${typeBadges[d.type]}">${typeNames[d.type]}</span></td>
+        <td>${d.description || "<em class='text-muted'>Không có mô tả</em>"}</td>
+        <td><code class="text-muted">${d.feed_name}</code></td>
+        <td>${d.farm_name}</td>
+        <td>
+          <span class="status-${d.status}">
+            ${d.status === "on" ? "● Bật" : "○ Tắt"}
+          </span>
+        </td>
+        <td>
+          <div class="d-flex gap-2 align-items-center">
+            <label class="toggle-switch mb-0">
+              <input type="checkbox" ${d.status === "on" ? "checked" : ""} 
+                     onchange="toggleDevice(${d.id}, '${d.status}')">
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn btn-sm btn-danger" onclick="deleteDevice(${d.id}, '${d.name}')">Xóa</button>
+          </div>
+        </td>
+      </tr>
+    `).join("");
 
-    // Card (mobile)
+    // Cards (mobile)
     cardsContainer.innerHTML = devices.map(d => `
-    <div class="device-card">
-      <div class="header">
-        <span class="id">#${d.id}</span>
-        <span class="${d.status === "on" ? "status-on" : "status-off"}">
-          ${d.status === "on" ? "Đang bật" : "Đang tắt"}
-        </span>
+      <div class="device-card">
+        <div class="header">
+          <span class="device-id">#${d.id}</span>
+          <span class="badge bg-${typeBadges[d.type]}">${typeNames[d.type]}</span>
+        </div>
+        <p><strong>Tên:</strong> ${d.name}</p>
+        <p><strong>Feed:</strong> <code>${d.feed_name}</code></p>
+        <p><strong>Nhà kính:</strong> ${d.farm_name}</p>
+        <p><strong>Mô tả:</strong> ${d.description || "Không có"}</p>
+        <p><strong>Trạng thái:</strong> <span class="status-${d.status}">${d.status === "on" ? "● Đang bật" : "○ Đang tắt"}</span></p>
+        <div class="actions">
+          <label class="toggle-switch mb-0">
+            <input type="checkbox" ${d.status === "on" ? "checked" : ""} 
+                   onchange="toggleDevice(${d.id}, '${d.status}')">
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn btn-sm btn-danger" onclick="deleteDevice(${d.id}, '${d.name}')">Xóa</button>
+        </div>
       </div>
-      <p><strong>Tên:</strong> ${d.name}</p>
-      <p><strong>Loại:</strong> ${typeNames[d.type]}</p>
-      <p><strong>Feed:</strong> ${d.feed_name}</p>
-      <p><strong>Nhà kính:</strong> ${d.farm_name}</p>
-      <p><strong>Mô tả:</strong> ${d.description || "Không có mô tả"}</p>
-      <div class="actions">
-        <button class="btn-toggle" onclick="toggleDevice(${d.id}, '${d.status}')">${d.status === "on" ? "Tắt" : "Bật"}</button>
-        <button class="btn-delete" onclick="deleteDevice(${d.id}, '${d.name}')">Xóa</button>
-      </div>
-    </div>
-  `).join("");
+    `).join("");
   }
 
   function changePage(delta) {
@@ -101,8 +118,21 @@
 
   function updatePagination(totalPages) {
     document.getElementById("pageInfo").textContent = `Trang ${currentPage}/${totalPages || 1}`;
-    document.getElementById("prevPage").disabled = currentPage === 1;
-    document.getElementById("nextPage").disabled = currentPage === totalPages || totalPages === 0;
+    
+    const prevItem = document.getElementById("prevPageItem");
+    const nextItem = document.getElementById("nextPageItem");
+    
+    if (currentPage === 1) {
+      prevItem.classList.add("disabled");
+    } else {
+      prevItem.classList.remove("disabled");
+    }
+    
+    if (currentPage === totalPages || totalPages === 0) {
+      nextItem.classList.add("disabled");
+    } else {
+      nextItem.classList.remove("disabled");
+    }
   }
 
   function filterDevices() {
@@ -124,23 +154,22 @@
     document.getElementById("totalDevices").textContent = count ?? allDevices.length;
   }
 
-  function toggleDevice(id, status) {
+  window.toggleDevice = function(id, currentStatus) {
     const d = allDevices.find(x => x.id === id);
     if (!d) return;
-    d.status = status === "on" ? "off" : "on";
+    d.status = currentStatus === "on" ? "off" : "on";
     filterDevices();
-  }
+  };
 
-  function deleteDevice(id, name) {
+  window.deleteDevice = function(id, name) {
     if (!confirm(`Xóa thiết bị "${name}"?`)) return;
     allDevices = allDevices.filter(d => d.id !== id);
     filterDevices();
-  }
+  };
 
-  function openAddDevice() {
-    alert("Thêm thiết bị: cần tạo modal hoặc form riêng.");
-  }
+  window.openAddDevice = function() {
+    alert("Chức năng thêm thiết bị đang phát triển");
+  };
 
   initDevicesPage();
-
 })();
