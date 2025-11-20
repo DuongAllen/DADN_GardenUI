@@ -1,17 +1,17 @@
-<div class="container-fluid py-4">
+<div class="dashboard-container">
   <h1 class="fs-2 fw-bold mb-3 my-neg text-primary-custom">Thống kê</h1>
 
   <!-- Top Cards -->
   <div class="row g-3 mb-4">
     <div class="col-lg-6">
-      <div class="card shadow-sm border-primary border-2">
-        <div class="card-header bg-primary bg-gradient text-white d-flex justify-content-between align-items-center">
+      <div class="card shadow-sm border-primary-custom border-2">
+        <div class="card-header bg-primary-custom text-white d-flex justify-content-between align-items-center">
           <h5 class="mb-0">📊 Dữ liệu cảm biến</h5>
           <button class="btn btn-light btn-sm" onclick="viewAllSensorData()">Xem tất cả →</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
-            <span class="display-6 text-primary fw-bold" id="sensorDataCount">0</span>
+            <span class="display-6 text-primary-custom fw-bold" id="sensorDataCount">0</span>
             <span class="text-muted ms-2">bản ghi hôm nay</span>
           </div>
           <div class="overflow-auto" style="max-height: 200px;" id="recentSensorLogs">
@@ -22,14 +22,14 @@
     </div>
 
     <div class="col-lg-6">
-      <div class="card shadow-sm border-warning border-2">
-        <div class="card-header bg-warning bg-gradient text-white d-flex justify-content-between align-items-center">
+      <div class="card shadow-sm border-primary-custom border-2">
+        <div class="card-header bg-primary-custom text-white d-flex justify-content-between align-items-center">
           <h5 class="mb-0">🔔 Cảnh báo</h5>
           <button class="btn btn-light btn-sm" onclick="viewAllNotifications()">Xem tất cả →</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
-            <span class="display-6 text-warning fw-bold" id="notificationCount">0</span>
+            <span class="display-6 text-primary-custom fw-bold" id="notificationCount">0</span>
             <span class="text-muted ms-2">cảnh báo chưa đọc</span>
           </div>
           <div class="overflow-auto" style="max-height: 200px;" id="recentNotifications">
@@ -50,7 +50,7 @@
             <div class="fs-1 me-3">🌡️</div>
             <div>
               <div class="text-muted small">Nhiệt độ TB</div>
-              <div class="fs-4 fw-bold text-primary" id="avgTemp">--°C</div>
+              <div class="fs-4 fw-bold text-primary-custom" id="avgTemp">--°C</div>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@
             <div class="fs-1 me-3">💧</div>
             <div>
               <div class="text-muted small">Độ ẩm TB</div>
-              <div class="fs-4 fw-bold text-primary" id="avgHumidity">--%</div>
+              <div class="fs-4 fw-bold text-primary-custom" id="avgHumidity">--%</div>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@
             <div class="fs-1 me-3">💡</div>
             <div>
               <div class="text-muted small">Ánh sáng TB</div>
-              <div class="fs-4 fw-bold text-primary" id="avgLight">-- lux</div>
+              <div class="fs-4 fw-bold text-primary-custom" id="avgLight">-- lux</div>
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@
             <div class="fs-1 me-3">🌱</div>
             <div>
               <div class="text-muted small">Độ ẩm đất TB</div>
-              <div class="fs-4 fw-bold text-primary" id="avgSoil">--%</div>
+              <div class="fs-4 fw-bold text-primary-custom" id="avgSoil">--%</div>
             </div>
           </div>
         </div>
@@ -105,8 +105,8 @@
 <div class="modal fade" id="sensorDataModal" tabindex="-1">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Tất cả dữ liệu cảm biến</h5>
+      <div class="modal-header bg-primary-custom text-white">
+        <h5 class="modal-title">📊 Tất cả dữ liệu cảm biến</h5>
         <button type="button" class="btn-close btn-close-white" onclick="closeModal('sensorDataModal')"></button>
       </div>
       <div class="modal-body">
@@ -130,7 +130,7 @@
         </div>
         <div class="table-responsive">
           <table class="table table-striped table-hover">
-            <thead class="table-primary">
+            <thead class="table-primary-custom">
               <tr>
                 <th>ID</th>
                 <th>Nhà kính</th>
@@ -150,7 +150,7 @@
 <div class="modal fade" id="notificationsModal" tabindex="-1">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
+      <div class="modal-header bg-primary-custom text-white">
         <h5 class="modal-title">🔔 Tất cả cảnh báo</h5>
         <button type="button" class="btn-close btn-close-white" onclick="closeModal('notificationsModal')"></button>
       </div>
@@ -175,7 +175,7 @@
         </div>
         <div class="table-responsive">
           <table class="table table-striped table-hover">
-            <thead class="table-warning">
+            <thead class="table-primary-custom">
               <tr>
                 <th>ID</th>
                 <th>Nhà kính</th>

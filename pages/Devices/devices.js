@@ -1,7 +1,8 @@
 (() => {
   let allDevices = [];
+  let allConfigs = [];
   let currentPage = 1;
-  const itemsPerPage = 5;
+  const itemsPerPage = 6;
 
   const mockDevices = [
     { id: 1, name: "Quạt phòng khách", description: "Quạt làm mát tự động", feed_name: "fan-livingroom", type: "fan", farm_name: "Nhà kính A", status: "on" },
@@ -12,11 +13,19 @@
     { id: 6, name: "Bơm phân bón", description: "Bơm phân bón dinh dưỡng", feed_name: "pump-fertilizer", type: "pump", farm_name: "Nhà kính B", status: "off" },
   ];
 
+  // Mock threshold configs
+  const mockConfigs = [
+    { id: 1, device_id: 1, sensor_type: "temp", threshold_type: "max_threshold", value: 32, device_mode: "on" },
+    { id: 2, device_id: 1, sensor_type: "humidity", threshold_type: "max_threshold", value: 75, device_mode: "on" },
+    { id: 3, device_id: 3, sensor_type: "soil_moisture", threshold_type: "min_threshold", value: 30, device_mode: "on" },
+  ];
+
   const typeNames = { fan: "Quạt", led: "Đèn", pump: "Bơm nước" };
-  const typeBadges = { 
-    fan: "primary", 
-    led: "warning", 
-    pump: "success" 
+  const sensorTypeNames = {
+    temp: "Nhiệt độ",
+    humidity: "Độ ẩm KK",
+    light: "Ánh sáng",
+    soil_moisture: "Độ ẩm đất"
   };
 
   function initDevicesPage() {
@@ -26,10 +35,12 @@
     document.getElementById("filterStatus").addEventListener("change", filterDevices);
     document.getElementById("prevPage").addEventListener("click", () => changePage(-1));
     document.getElementById("nextPage").addEventListener("click", () => changePage(1));
+    document.getElementById("thresholdForm").addEventListener("submit", handleSaveThreshold);
   }
 
   function loadDevices() {
     allDevices = mockDevices;
+    allConfigs = mockConfigs;
     renderPage();
     updateTotalDevices();
   }
@@ -49,7 +60,7 @@
 
   function renderDevices(devices) {
     const tbody = document.getElementById("devicesTableBody");
-    const cardsContainer = document.getElementById("deviceCardsContainer");
+    const cardsContainer = document.getElementById("devicesCardsContainer");
     const emptyState = document.getElementById("emptyState");
 
     if (devices.length === 0) {
@@ -60,55 +71,134 @@
     }
     emptyState.classList.add("d-none");
 
-    // Table (desktop)
-    tbody.innerHTML = devices.map(d => `
-      <tr>
-        <td><strong>#${d.id}</strong></td>
-        <td>${d.name}</td>
-        <td><span class="badge bg-${typeBadges[d.type]}">${typeNames[d.type]}</span></td>
-        <td>${d.description || "<em class='text-muted'>Không có mô tả</em>"}</td>
-        <td><code class="text-muted">${d.feed_name}</code></td>
-        <td>${d.farm_name}</td>
-        <td>
-          <span class="status-${d.status}">
-            ${d.status === "on" ? "● Bật" : "○ Tắt"}
-          </span>
-        </td>
-        <td>
-          <div class="d-flex gap-2 align-items-center">
-            <label class="toggle-switch mb-0">
-              <input type="checkbox" ${d.status === "on" ? "checked" : ""} 
-                     onchange="toggleDevice(${d.id}, '${d.status}')">
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn btn-sm btn-danger" onclick="deleteDevice(${d.id}, '${d.name}')">Xóa</button>
-          </div>
-        </td>
-      </tr>
-    `).join("");
+    // TABLE (Desktop) - dạng bảng
+    tbody.innerHTML = devices.map(d => {
+      const configs = allConfigs.filter(c => c.device_id === d.id);
+      const hasConfig = configs.length > 0;
+      const thresholdSummary = hasConfig ? getThresholdText(configs) : "Chưa thiết lập";
 
-    // Cards (mobile)
-    cardsContainer.innerHTML = devices.map(d => `
-      <div class="device-card">
-        <div class="header">
-          <span class="device-id">#${d.id}</span>
-          <span class="badge bg-${typeBadges[d.type]}">${typeNames[d.type]}</span>
+      return `
+        <tr>
+          <td><strong>#${d.id}</strong></td>
+          <td>
+            <div><strong>${d.name}</strong></div>
+            <small class="text-muted">${d.description || "Không có mô tả"}</small>
+          </td>
+          <td><span class="badge bg-${typeBadges[d.type]}">${typeNames[d.type]}</span></td>
+          <td><code class="text-muted small">${d.feed_name}</code></td>
+          <td>${d.farm_name}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <span class="status-${d.status} small">
+                ${d.status === "on" ? "● Bật" : "○ Tắt"}
+              </span>
+              <label class="toggle-switch mb-0">
+                <input type="checkbox" ${d.status === "on" ? "checked" : ""} 
+                       onchange="toggleDevice(${d.id}, '${d.status}')">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+          <td>
+            <small class="text-muted">${thresholdSummary}</small>
+          </td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-primary" onclick="openThresholdModal(${d.id}, '${d.name}')" title="Thiết lập ngưỡng">
+                ⚙️
+              </button>
+              <button class="btn btn-danger" onclick="showDeleteConfirm(${d.id}, '${d.name}')" title="Xóa">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    // CARDS (Mobile/Tablet)
+    cardsContainer.innerHTML = devices.map(d => {
+      const configs = allConfigs.filter(c => c.device_id === d.id);
+      const hasConfig = configs.length > 0;
+
+      return `
+        <div class="col-12">
+          <div class="device-card-full">
+            <div class="device-card-header">
+              <div class="device-info">
+                <h5>${d.name}</h5>
+                <div class="device-meta">📍 ${d.farm_name}</div>
+                <div class="device-meta"><code>${d.feed_name}</code></div>
+                <div class="device-meta text-muted">${d.description || "Không có mô tả"}</div>
+              </div>
+              <span class="device-type-badge ${d.type}">${typeNames[d.type]}</span>
+            </div>
+
+            <div class="threshold-summary">
+              <div class="threshold-summary-title">⚙️ Ngưỡng đã cấu hình:</div>
+              ${hasConfig ? renderThresholdSummary(configs) : '<div class="no-threshold">Chưa thiết lập ngưỡng</div>'}
+            </div>
+
+            <div class="device-actions">
+              <div class="device-status-row">
+                <span class="status-label status-${d.status}">
+                  ${d.status === "on" ? "● Đang bật" : "○ Đang tắt"}
+                </span>
+                <label class="toggle-switch mb-0">
+                  <input type="checkbox" ${d.status === "on" ? "checked" : ""} 
+                         onchange="toggleDevice(${d.id}, '${d.status}')">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <button class="btn btn-primary btn-sm w-100" onclick="openThresholdModal(${d.id}, '${d.name}')">
+                ${hasConfig ? '✏️ Chỉnh sửa ngưỡng' : '⚙️ Thiết lập ngưỡng'}
+              </button>
+              <button class="btn btn-outline-danger btn-sm w-100" onclick="showDeleteConfirm(${d.id}, '${d.name}')">
+                🗑️ Xóa thiết bị
+              </button>
+            </div>
+          </div>
         </div>
-        <p><strong>Tên:</strong> ${d.name}</p>
-        <p><strong>Feed:</strong> <code>${d.feed_name}</code></p>
-        <p><strong>Nhà kính:</strong> ${d.farm_name}</p>
-        <p><strong>Mô tả:</strong> ${d.description || "Không có"}</p>
-        <p><strong>Trạng thái:</strong> <span class="status-${d.status}">${d.status === "on" ? "● Đang bật" : "○ Đang tắt"}</span></p>
-        <div class="actions">
-          <label class="toggle-switch mb-0">
-            <input type="checkbox" ${d.status === "on" ? "checked" : ""} 
-                   onchange="toggleDevice(${d.id}, '${d.status}')">
-            <span class="toggle-slider"></span>
-          </label>
-          <button class="btn btn-sm btn-danger" onclick="deleteDevice(${d.id}, '${d.name}')">Xóa</button>
+      `;
+    }).join("");
+  }
+
+  // Helper: get short threshold text for table
+  function getThresholdText(configs) {
+    const count = configs.length;
+    if (count === 0) return "Chưa thiết lập";
+    const sensors = [...new Set(configs.map(c => c.sensor_type))];
+    return `${sensors.length} loại cảm biến`;
+  }
+
+  const typeBadges = { 
+    fan: "primary", 
+    led: "warning", 
+    pump: "success" 
+  };
+
+  function renderThresholdSummary(configs) {
+    const sensorTypes = ["temp", "humidity", "light", "soil_moisture"];
+    
+    const items = sensorTypes.map(sensorType => {
+      const minConfig = configs.find(c => c.sensor_type === sensorType && c.threshold_type === "min_threshold");
+      const maxConfig = configs.find(c => c.sensor_type === sensorType && c.threshold_type === "max_threshold");
+      
+      if (!minConfig && !maxConfig) return "";
+
+      const minText = minConfig ? `Min: ${minConfig.value} → ${minConfig.device_mode === 'on' ? 'Bật' : 'Tắt'}` : "";
+      const maxText = maxConfig ? `Max: ${maxConfig.value} → ${maxConfig.device_mode === 'on' ? 'Bật' : 'Tắt'}` : "";
+      const separator = minText && maxText ? " • " : "";
+
+      return `
+        <div class="threshold-item-summary configured">
+          <span class="threshold-label">${sensorTypeNames[sensorType]}</span>
+          <span class="threshold-value configured">${minText}${separator}${maxText}</span>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).filter(Boolean).join("");
+
+    return `<div class="threshold-items">${items}</div>`;
   }
 
   function changePage(delta) {
@@ -161,15 +251,101 @@
     filterDevices();
   };
 
-  window.deleteDevice = function(id, name) {
-    if (!confirm(`Xóa thiết bị "${name}"?`)) return;
-    allDevices = allDevices.filter(d => d.id !== id);
-    filterDevices();
+  // Delete with confirmation modal
+  let deviceToDelete = null;
+
+  window.showDeleteConfirm = function(id, name) {
+    deviceToDelete = id;
+    document.getElementById("deleteDeviceName").textContent = name;
+    const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    modal.show();
   };
+
+  document.getElementById("confirmDeleteBtn").addEventListener("click", function() {
+    if (deviceToDelete) {
+      allDevices = allDevices.filter(d => d.id !== deviceToDelete);
+      allConfigs = allConfigs.filter(c => c.device_id !== deviceToDelete);
+      filterDevices();
+      
+      const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal'));
+      modal.hide();
+      deviceToDelete = null;
+    }
+  });
 
   window.openAddDevice = function() {
     alert("Chức năng thêm thiết bị đang phát triển");
   };
+
+  // Threshold Modal
+  window.openThresholdModal = function(deviceId, deviceName) {
+    document.getElementById("deviceId").value = deviceId;
+    document.getElementById("deviceName").value = deviceName;
+    
+    // Load existing configs
+    const configs = allConfigs.filter(c => c.device_id === deviceId);
+    
+    // Reset form
+    document.getElementById("thresholdForm").reset();
+    document.getElementById("deviceId").value = deviceId;
+    document.getElementById("deviceName").value = deviceName;
+    
+    // Fill existing values
+    configs.forEach(config => {
+      const prefix = config.sensor_type;
+      const suffix = config.threshold_type === "min_threshold" ? "_min" : "_max";
+      
+      const valueInput = document.getElementById(prefix + suffix);
+      const modeSelect = document.getElementById(prefix + suffix + "_mode");
+      
+      if (valueInput) valueInput.value = config.value;
+      if (modeSelect) modeSelect.value = config.device_mode;
+    });
+    
+    const modal = new bootstrap.Modal(document.getElementById('thresholdModal'));
+    modal.show();
+  };
+
+  function handleSaveThreshold(e) {
+    e.preventDefault();
+
+    const deviceId = parseInt(document.getElementById("deviceId").value);
+    
+    // Remove old configs for this device
+    allConfigs = allConfigs.filter(c => c.device_id !== deviceId);
+    
+    // Get max ID for new configs
+    let maxId = Math.max(...allConfigs.map(c => c.id), 0);
+    
+    // Sensor types to check
+    const sensorTypes = ["temp", "humidity", "light", "soil_moisture"];
+    const thresholdTypes = ["min", "max"];
+    
+    sensorTypes.forEach(sensorType => {
+      thresholdTypes.forEach(thresholdType => {
+        const valueInput = document.getElementById(`${sensorType}_${thresholdType}`);
+        const modeSelect = document.getElementById(`${sensorType}_${thresholdType}_mode`);
+        
+        if (valueInput && valueInput.value && modeSelect && modeSelect.value) {
+          maxId++;
+          allConfigs.push({
+            id: maxId,
+            device_id: deviceId,
+            sensor_type: sensorType,
+            threshold_type: thresholdType === "min" ? "min_threshold" : "max_threshold",
+            value: parseFloat(valueInput.value),
+            device_mode: modeSelect.value
+          });
+        }
+      });
+    });
+    
+    const modal = bootstrap.Modal.getInstance(document.getElementById('thresholdModal'));
+    modal.hide();
+    
+    filterDevices();
+    alert("Lưu cấu hình ngưỡng thành công!");
+  }
 
   initDevicesPage();
 })();
