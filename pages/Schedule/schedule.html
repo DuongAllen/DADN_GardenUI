@@ -1,29 +1,31 @@
 <div class="schedule-container">
   <h1 class="fs-2 fw-bold mb-3 my-neg text-primary-custom">Lập lịch cho thiết bị</h1>
 
-  <div class="schedule-header">
-    <div class="row g-2 mb-3">
-      <div class="col-md-4">
-        <input type="text" class="form-control" id="searchDevice" placeholder="Tìm kiếm thiết bị...">
-      </div>
-      <div class="col-md-3">
-        <select class="form-select" id="filterDeviceType">
-          <option value="">Tất cả loại</option>
-          <option value="fan">Quạt</option>
-          <option value="led">Đèn</option>
-          <option value="pump">Bơm nước</option>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <select class="form-select" id="filterFarm">
-          <option value="">Tất cả nhà kính</option>
-          <option value="1">Nhà kính A</option>
-          <option value="2">Nhà kính B</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <div class="total-info text-center">
-          Tổng: <strong id="totalDevices">0</strong>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-2">
+        <div class="col-md-5">
+          <input type="text" class="form-control" id="searchDevice" placeholder="Tìm kiếm thiết bị...">
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" id="filterDeviceType">
+            <option value="">Tất cả loại</option>
+            <option value="fan">Quạt</option>
+            <option value="led">Đèn</option>
+            <option value="pump">Bơm nước</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select" id="filterFarm">
+            <option value="">Tất cả nhà kính</option>
+            <option value="1">Nhà kính A</option>
+            <option value="2">Nhà kính B</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <div class="alert alert-info mb-0 text-center py-2">
+            <strong id="totalDevices">0</strong> thiết bị
+          </div>
         </div>
       </div>
     </div>
@@ -32,7 +34,7 @@
   <div class="devices-grid" id="devicesGrid">
   </div>
 
-  <div id="emptyState" class="empty-state" style="display: none;">
+  <div id="emptyState" class="empty-state d-none">
     <p>Không tìm thấy thiết bị nào</p>
   </div>
 </div>
@@ -48,7 +50,7 @@
         <form id="scheduleForm">
           <input type="hidden" id="scheduleId">
           <input type="hidden" id="deviceId">
-          
+
           <div class="mb-3">
             <label class="form-label">Thiết bị</label>
             <input type="text" class="form-control" id="deviceName" readonly>

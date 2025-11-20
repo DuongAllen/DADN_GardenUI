@@ -13,7 +13,6 @@
     { id: 6, name: "Bơm phân bón", description: "Bơm phân bón dinh dưỡng", feed_name: "pump-fertilizer", type: "pump", farm_name: "Nhà kính B", status: "off" },
   ];
 
-  // Mock threshold configs
   const mockConfigs = [
     { id: 1, device_id: 1, sensor_type: "temp", threshold_type: "max_threshold", value: 32, device_mode: "on" },
     { id: 2, device_id: 1, sensor_type: "humidity", threshold_type: "max_threshold", value: 75, device_mode: "on" },
@@ -26,6 +25,12 @@
     humidity: "Độ ẩm KK",
     light: "Ánh sáng",
     soil_moisture: "Độ ẩm đất"
+  };
+
+  const deviceSensorMapping = {
+    fan: ["temp", "humidity"],           // Quạt: nhiệt độ + độ ẩm không khí
+    pump: ["temp", "soil_moisture"],     // Bơm: nhiệt độ + độ ẩm đất
+    led: ["temp", "light"]               // Đèn: nhiệt độ + ánh sáng
   };
 
   function initDevicesPage() {
@@ -105,10 +110,10 @@
           <td>
             <div class="btn-group btn-group-sm">
               <button class="btn btn-primary" onclick="openThresholdModal(${d.id}, '${d.name}')" title="Thiết lập ngưỡng">
-                ⚙️
-              </button>
+                <img src="../../assets/cogwheel.png" style="width:16px; height:16px; margin-top: -2px;">
+              </button> 
               <button class="btn btn-danger" onclick="showDeleteConfirm(${d.id}, '${d.name}')" title="Xóa">
-                🗑️
+                <img src="../../assets/bin.png" style="width:16px; height:16px; margin-top: -2px;">
               </button>
             </div>
           </td>
@@ -127,7 +132,7 @@
             <div class="device-card-header">
               <div class="device-info">
                 <h5>${d.name}</h5>
-                <div class="device-meta">📍 ${d.farm_name}</div>
+                <div class="device-meta"> <img src="../../assets/location.png" style="width:16px; height:16px;"> ${d.farm_name}</div>
                 <div class="device-meta"><code>${d.feed_name}</code></div>
                 <div class="device-meta text-muted">${d.description || "Không có mô tả"}</div>
               </div>
@@ -135,7 +140,7 @@
             </div>
 
             <div class="threshold-summary">
-              <div class="threshold-summary-title">⚙️ Ngưỡng đã cấu hình:</div>
+              <div class="threshold-summary-title"> <img src="../../assets/cogwheel.png" style="width:16px; height:16px; margin-top: -2px;"> Ngưỡng đã cấu hình:</div>
               ${hasConfig ? renderThresholdSummary(configs) : '<div class="no-threshold">Chưa thiết lập ngưỡng</div>'}
             </div>
 
@@ -151,10 +156,12 @@
                 </label>
               </div>
               <button class="btn btn-primary btn-sm w-100" onclick="openThresholdModal(${d.id}, '${d.name}')">
-                ${hasConfig ? '✏️ Chỉnh sửa ngưỡng' : '⚙️ Thiết lập ngưỡng'}
+                ${hasConfig 
+                  ? '<img src="../../assets/edit.png" style="width:16px; height:16px; margin-top: -4px;"> Chỉnh sửa ngưỡng' 
+                  : '<img src="../../assets/cogwheel.png" style="width:16px; height:16px; margin-top: -4px;"> Thiết lập ngưỡng'}
               </button>
               <button class="btn btn-outline-danger btn-sm w-100" onclick="showDeleteConfirm(${d.id}, '${d.name}')">
-                🗑️ Xóa thiết bị
+                <img src="../../assets/bin.png" style="width:16px; height:16px; margin-top: -4px;"> Xóa thiết bị
               </button>
             </div>
           </div>
@@ -163,7 +170,6 @@
     }).join("");
   }
 
-  // Helper: get short threshold text for table
   function getThresholdText(configs) {
     const count = configs.length;
     if (count === 0) return "Chưa thiết lập";
@@ -251,7 +257,6 @@
     filterDevices();
   };
 
-  // Delete with confirmation modal
   let deviceToDelete = null;
 
   window.showDeleteConfirm = function(id, name) {
@@ -277,18 +282,29 @@
     alert("Chức năng thêm thiết bị đang phát triển");
   };
 
-  // Threshold Modal
   window.openThresholdModal = function(deviceId, deviceName) {
+    const device = allDevices.find(d => d.id === deviceId);
+    if (!device) return;
+
     document.getElementById("deviceId").value = deviceId;
     document.getElementById("deviceName").value = deviceName;
     
-    // Load existing configs
     const configs = allConfigs.filter(c => c.device_id === deviceId);
     
     // Reset form
     document.getElementById("thresholdForm").reset();
     document.getElementById("deviceId").value = deviceId;
     document.getElementById("deviceName").value = deviceName;
+    
+    document.querySelectorAll('.threshold-section').forEach(section => {
+      section.style.display = 'none';
+    });
+    
+    const allowedSensors = deviceSensorMapping[device.type] || [];
+    allowedSensors.forEach(sensorType => {
+      const section = document.querySelector(`[data-sensor="${sensorType}"]`);
+      if (section) section.style.display = 'block';
+    });
     
     // Fill existing values
     configs.forEach(config => {
@@ -302,7 +318,13 @@
       if (modeSelect) modeSelect.value = config.device_mode;
     });
     
-    const modal = new bootstrap.Modal(document.getElementById('thresholdModal'));
+    const modalElement = document.getElementById('thresholdModal');
+    const modal = new bootstrap.Modal(modalElement);
+    
+    modalElement.addEventListener('hide.bs.modal', function() {
+      document.activeElement.blur();
+    }, { once: true });
+    
     modal.show();
   };
 
@@ -311,13 +333,9 @@
 
     const deviceId = parseInt(document.getElementById("deviceId").value);
     
-    // Remove old configs for this device
     allConfigs = allConfigs.filter(c => c.device_id !== deviceId);
-    
-    // Get max ID for new configs
     let maxId = Math.max(...allConfigs.map(c => c.id), 0);
     
-    // Sensor types to check
     const sensorTypes = ["temp", "humidity", "light", "soil_moisture"];
     const thresholdTypes = ["min", "max"];
     
@@ -339,6 +357,8 @@
         }
       });
     });
+    
+    document.activeElement.blur();
     
     const modal = bootstrap.Modal.getInstance(document.getElementById('thresholdModal'));
     modal.hide();

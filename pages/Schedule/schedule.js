@@ -1,5 +1,4 @@
 (() => {
-  // Mock data
   const mockDevices = [
     { 
       id: 1, 
@@ -186,7 +185,6 @@
     document.getElementById("startMinute").value = schedule.start_minute;
     document.getElementById("duration").value = Math.floor(schedule.duration / 60);
 
-    // Check day checkbox
     document.querySelectorAll('input[name="day"]').forEach(checkbox => {
       checkbox.checked = (parseInt(checkbox.value) === schedule.day_of_week);
     });
