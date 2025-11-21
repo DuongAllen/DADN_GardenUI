@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BK HCM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <span class="menu-icon" id="menuToggle">☰</span>
+      <span class="site-title">BK HCM</span>
+    </div>
+
+    <div class="nav-title">BK HCM</div>
+
+    <div class="nav-center" id="mobileMenu">
+      <a href="#dashboard">Thống kê</a>
+      <a href="#devices">Thiết bị</a>
+      <a href="#schedule">Lịch trình</a>
+    </div>
+
+    <div class="nav-right">
+      <img src="assets/user_icon.png" alt="avatar" onclick="window.location.href='profile.html'">
+    </div>
+  </header>
+
+  <main id="content"></main>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="index.js"></script>
+  <script>
+    /*
+      Auth helper:
+       - Auth.saveToken(token)
+       - Auth.getToken()
+       - Auth.removeToken()
+       - Auth.decodeToken(token) -> payload object or null
+       - Auth.getRole() -> role string or null
+       - Auth.createFakeJWT(payload) -> fake JWT string (for demo)
+       - Auth.redirectBasedOnRole({userPage, adminPage, loginPage})
+    */
+    window.Auth = (function () {
+      const KEY = 'auth_token';
+
+      function saveToken(token) {
+        localStorage.setItem(KEY, token);
+      }
+
+      function getToken() {
+        return localStorage.getItem(KEY);
+      }
+
+      function removeToken() {
+        localStorage.removeItem(KEY);
+      }
+
+      function b64UrlDecode(str) {
+        if (!str) return null;
+        str = str.replace(/-/g, '+').replace(/_/g, '/');
+        while (str.length % 4) str += '=';
+        try { return atob(str); } catch (e) { return null; }
+      }
+
+      function decodeToken(token) {
+        if (!token) return null;
+        const parts = token.split('.');
+        if (parts.length < 2) return null;
+        try {
+          const payload = b64UrlDecode(parts[1]);
+          return payload ? JSON.parse(payload) : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function getRole() {
+        const t = getToken();
+        const payload = decodeToken(t);
+        return payload && payload.role ? payload.role : null;
+      }
+
+      // For demo only: create a fake (unsigned) JWT: header.payload.signature
+      function createFakeJWT(payload) {
+        const header = { alg: "none", typ: "JWT" };
+        function b64UrlEncode(obj) {
+          return btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+        const h = b64UrlEncode(header);
+        const p = b64UrlEncode(payload);
+        const s = ''; // no signature
+        return `${h}.${p}.${s}`;
+      }
+
+      function redirectBasedOnRole(options = {}) {
+        const { userPage = 'index.html', adminPage = 'admin.html', loginPage = 'login.html' } = options;
+        const token = getToken();
+        if (!token) {
+          window.location.href = loginPage;
+          return;
+        }
+        const role = getRole();
+        if (role === 'admin') {
+          if (window.location.pathname.endsWith(adminPage) === false) window.location.href = adminPage;
+        } else if (role === 'user') {
+          // user pages: default index.html
+          if (window.location.pathname.endsWith(userPage) === false) {
+            window.location.href = userPage;
+          }
+        } else {
+          // unknown role -> go to login
+          window.location.href = loginPage;
+        }
+      }
+
+      return {
+        saveToken,
+        getToken,
+        removeToken,
+        decodeToken,
+        getRole,
+        createFakeJWT,
+        redirectBasedOnRole
+      };
+    })();
+  </script>
+</body>
+</html>

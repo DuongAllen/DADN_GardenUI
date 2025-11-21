@@ -1,0 +1,160 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 60px !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+  z-index: 1000 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+.nav-left, .nav-center, .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.nav-center a {
+  font-size: 15px;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: white;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.nav-center a:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.nav-center a.active {
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.nav-right img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  filter: invert(1);
+  transition: opacity 0.2s;
+}
+
+.nav-right img:hover {
+  opacity: 0.8;
+}
+
+main {
+  margin-top: 80px;
+  padding: 20px;
+}
+
+/* ===== MOBILE ===== */
+.nav-title {
+  display: none;
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+}
+
+.menu-icon {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Mobile breakpoint */
+@media (max-width: 768px) {
+  .menu-icon {
+    display: inline-block;
+  }
+
+  .navbar {
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+
+  .nav-center {
+    display: none;
+    flex-direction: column;
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    animation: slideDown 0.25s ease;
+  }
+
+  .nav-center.show {
+    display: flex !important;
+  }
+
+  .nav-center a {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  .nav-center a:last-child {
+    border-bottom: none;
+  }
+
+  .nav-title {
+    display: block;
+  }
+
+  .nav-right img {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+
+  .site-title {
+    display: none;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Make the "Quay lại" (back) button black in the profile header */
+.navbar.p-2 .btn-link {
+  color: #000 !important;s
+  text-decoration: none !important;
+}
+.navbar.p-2 .btn-link:hover,
+.navbar.p-2 .btn-link:focus {
+  color: #000 !important;
+  text-decoration: underline !important;
+  background: transparent !important;
+}

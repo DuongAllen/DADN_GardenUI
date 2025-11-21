@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập | BK TPHCM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 380px;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            font-weight: bold;
+            padding: 10px 0;
+            border-radius: 8px;
+        }
+
+        .forgot-password {
+            font-size: 0.9em;
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            height: 48px;
+            padding-left: 15px;
+        }
+
+        .input-group-text-custom {
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            position: absolute;
+            right: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            padding: 0 15px;
+            z-index: 10;
+        }
+
+        .password-input-group {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAL0AyQMBIgACEQEDEQH/xAAcAAEAAgIDAQAAAAAAAAAAAAAABgcCBQEDCAT/xABEEAABAwICBgUJBQUIAwAAAAABAAIDBAUGERIhMUFhcQcTMlGBFCIzNmJyc7GyIzSRocFCUnR10RVDU4KSotLxFiRj/8QAGgEBAAIDAQAAAAAAAAAAAAAAAAQFAgMGAf/EACsRAAICAQMCBAYDAQAAAAAAAAABAgMRBBIhBTEiUXGhEzIzQYGxYZHRQv/aAAwDAQACEQMRAD8AvFERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREARF89ZW09FTyVFVPFDBGM3yyvDWtHElO4O8kDatXe8QW2xwMludXHTiR2jG12tzz3NaNZVbYu6XGjTpcMR9Y7Ya2dvmj3GHbzd+BVWyVtVcbtHV19RLU1D5W6UkrtInXs4DhsCstP06c+bOF7ka3UKKe3lnqahr6augbPSzMmidsew5jke48F9Som3XGstlR19BO+F+/LY7gRsPirAsGO6Wp0YboG0k3+J/dO/wCPjq4rzUdOsr5hyvcj6bqVdvE+H7E2RYMka9oIIyIzBB1FZquLEIiIAiIgCIiAIiIAiIgCIiAIiIAiIgC4c4NGtcrpqvQu90/JAQTF/SharMX01u0blXDVoxO+yjPtP3ngM+OSprEWJLtiSoE12qjI1pzjhZ5sUfut/U5nitNF6JnuhZLpaNJXT27+ZXWXSnx9gu6k+9wfFb8wuld1J97g+K35hSjRLsyboiLIozb2PEdxsrg2mk06fPM08mtvh3Hl+asfD+LLfd9GJr+oqj/cSnWT7J/a+fBVCtjhz1gtv8VH9QUHVaSqyLljDJ2k1ltUlDOV5F3A5jMLlYx9gLJc4dMEREAREQBERAEREAREQBERAEREAXTVehd7p+S7l01XoXe6fkgPI0Xome6FksYvRM90LJdeypfcLupPvcHxW/MLmio6m4VUdJQ08tRUSHJkUTS5x8O7juVsYO6InNdFW4nmycCHNooH7D7bx8m/iVou1FdKzNmUapTWER1FM8QYBqqTSntDjVQ7TC70jeW53z5qGva5j3Me0te05Oa4ZEHuIWyq6u1ZgykuospeJo4Wxw36wW3+Kj+oLXLY4b9YLb/FR/UF7b8kvQ8p+pH1RdsfYCyWMfYCyXJHYBERAEREAREQBERAEREAREQBERAF01XoXe6fku0uA2rQ4gxJb7UwxTyadQ4ZNgj1u17z3Dn+azhCU5YissxnOMFuk8I8vxejZyCsPCPRXdrzoVN307ZQnXk5v27xwaezzdr4FWdg7o9suF2Rysj8suDQM6udozB9huxnhr7yVqca9Jc2GcQOtUVnbV5RseH+UlhJduy0CreetndJw06/JGVMY+KZLsPYbtOHKXye00jIc+3IfOkk95x1n5Dctsqgk6Z62IaU2F9Bo2l1W5vzjU8wVjCgxdRSzUbHwzwECenkyJZnsII2g5HXwKrrtPfFb7F+e5IjOD4RI1p77hu23thNVDoz5ZNnj1PH9RwKjsvSDJH0gf8AiotjS3rmxeVeUa9cYfno6PHLapDivEdDhe0vr692Z7MMLT50r9zR/XcFioXVyjt4b7HklCyLUuUVxiDCVys2lLo+U0g19fEOyPabu/McV8GG/WC2/wAVH9QU6wFjK54ukllNjZR0EWp1Sakv0n/utGgM+Jz1L6MS2G1W6OXEUUToJLeDVyRwgaMoZ5xGWwE5bRlxzVotbJZquXP8FVPpyUlZS+PIlcfYCyWiwzim04jputtdU2RzRnJC7zZY/eb+uzit4CDsVNKLi8SXJc5zyjlERYgIiIAiIgCIiAIiIAiLFxyGpAZE5bV8F0u1Ha4OurZ2Qs/Zz2uPcBtKiGIceNjc+ns7NORpLTUSDzWn2W7+Z/NQOsq6itqHVFZM+aV217zmeXAcFZafps5+Kzhe5WanqcK/DXy/YlF+xzWVpdDbA6kgOoyH0rvH9nw18VE2kmUEkkl2ZJ2krFZM7beYV1XTCqOILBSW3WXSzN5L+VE9JdVHQdK1HWz6XVUz6SZ+iMzotcHHLjkFeyozpGZDJ0uW+OqbG6nfNRtlbIAWlheNIOz1ZZZ5qh6f9V58mdTd8q9SVVvTDhw0srY6GvqHOaW9U+Jga7MbCS7Z36jyWt6BrNUQQV13lezqZ2tgia14cToklxIB1bgM9e3hnLqmyYBELzNQ4fij0fOeGxR5DvzGWXNVt0SzGDpGq6a0SPdbZGzjWT50LXfZuPHW3X7R71uioSosVaa88mDyprdydWILjT2jpnqbjWFwgpqhj36Lczl1DdQHetebm7pCx1SNvtZ5HSTSdVDG05iJu6Np/ecchpHaSO4BfXim1MvfTDVWyWV0UdTVRMe9gBIHUsJyz36v+1v+lnA9LbrRR3WxU4gjoWCCdkeeehn5r89uYJOZ2nPMnUpSnXH4afzOKSfka2pPc/smWzQUVNbqOGjoYWQ08LdGONg1NC1WPPUm/fy6f6Ctb0ZYrGJ7A3yl4NypMo6ob3fuyf5gPxBWyx56k37+XT/QVUKEoXKMu+SUmnHKPMlLUT0lRHUUk0kE8ZzZLG4tc08CFaOEulyWIspsTxmRmwVsDPOHvsG3m38CqpRdFdRXcsTRXQslDsesbbc6O50jKqhqYqinf2ZYnaTTw58F9i8qWK+3OwVflNpq3wPOWm0a2SDuc06j8xuyVz4G6TKW/wBRDbrhAaS5SamaALopiBmct7TkDqP4lUuo0E6vFHlE2u+M+H3LERcNOYzXKgG4IiIAiIgCIiALGTYOayWMmwc0BQtT95m+I75lda7Kn7zN8R3zK612C7HGPuFkztt5hYrJnbbzCMLuX8oFi3o/s2Jry+41d2mglcxsZjjdHkNHmM1PVFJ7TbXY1ijdb6QsfQPkc0wNyc/rG+cRlt17Vy+nk4ybTxwdbc2kuMkWb0N2AyaAvVYX55aIMWef+lTHCOEbPhNkkVu031MwzkmneHSOaNmwAAcgtDS2Wa6SXMxQ0ELG3aVzq52fXx6L8yG6v13lbOqlqarGUE1lnpHOfai4STNL2OZ1u7RI35fmpVvxJ+BzyR4WpLdsOuXA9sdi84sdcZhM2USGPNnVAhgZlnlnu79qlNUKOropI6kwyUs7DG8OcC17SMiOOrNQOi6ryey/2uY/7O8sq/KNMfY9bpHQ0s93ayzXfeqa0XC2xUlnbo0813bG4sP2ZeWOBLN2WzZqWMqXKSUpPjjOOyTYWp8LaS9M+aR2YW6O6DC17ZW0F4rDIWOa6CQsykYdxyGe0A594W9x56k37+XT/QVGMP1UtyxLa7lUhwlkbJTgO1ejhbpf73PUnx56k37+XT/QVhdGauhveXx+zdp7VZBuKwjy+iIuhIIUm6NPXyzfGd9DlGVJujT18s3xnfQ5ar/pS9H+jOv50elWdgLJYs7AWS5YswiIgCIiAIiIAsZNg5rJYybBzQFC1P3mb4jvmV1rKteyOeofI4NaJHZlxyA1lR+vv41soRn/APVw+Q/quwXY5CNUrJYijb1VXBSR6c8gaNw3nkFH6++TTgspwYY+/Pzj47vBaySR8ry+V7nvO0uOawXmSfVpYw5fLLGwj0sXO1aFLfWvuVINXW5/bsHM6n+OR4q47Fe7TiCnFbaamKoAGi4gZPj4OB1jxXlZfTbq+stlWyrt1TLTVLOzJE7I5dx7xwOoqvv0ELOYcP2LKvUNcS5PWTWMaHBrGjSOZyG0964ZFEwgsjY0huiCGgZDu5KqcI9L8UuhS4oiET9QFbA0lh99u0cxmOACtSlqYKynjqKSaOeCQaTJI3BzXDvBG1U11NlLxNEuMoyWUcmGIxmIxM6s7WaIyPgghiDGMETA1hza0NGTTwXXXV1Lb6c1FbOyGIftPO09w7zwCr/EGP559KCysMEew1EgGmfdGweOvksqNPbc/D2NN+pqoWZvny+5MLzerTYmNfVuYJRmY4Y2gvOe3Ibs+85BVziPF9fe2SUwAp6F4LXQt1mQdzjv5bOaj8kj5ZHSSvc+Rxzc95zLjxJWKu9Poa6uXyyj1HULLeI8I0lfYWPzfRnQd/huOo8juWhmhlgfoTRuY7uIU5XVUU8NTH1c8Ye3ju5dym4NdWrlHiXKIOpN0aevlm+M76HL4q+xSxEvpCZWfuHtD+q+7o1BGPbOCCCJnZg7vMctN/0pej/RZ0WRnJOLPSjOwFksWdgLJcqWwREQBERAEREAWLwSNXeskQFH486OL1HPNXWuV9ypdIv8nAyli36mjU/w18DtVZuBa5zXAtc0kOaRkQRtBXrstB2qK4twJZ8StdJUw9TWZZNq4AA//NucOfgQrXT9Sa8Nv9kWemj/AMcHm1FKcWYEvOGS+WaPyqgGyrgadED2xtZ46uKiyt4TjNbovKIkouLwwiKV4TwDecS6E7GCjoHa/Kp2nJw9hu13PUOKTsjWt0nhCMXJ4RFmNdI9rI2ue95DWtaMy4nYAN5Vv9F2D8T2udtdU1slso3nSfQ5B7pveadTN2vtbtSmmE8D2bDLA+ig6yqIydVzZOkPeBuaOAy45qThoGxU2q6h8ROEFx/JNqo28vuVdi/D178ofWzTyXKIZ5PaPOjHdoDYPd8clEQc9iv9zQefeoziDB9BddKZg8mqjr62IanH2m7+eo8Vs03UlFKFi/K/wr9V0xybnU+fJ/6VMi2d6sNwsr//AHIc4icmzs1sd47uRWsVxGcZrdF5RSzhKD2yWGEQnLapLYcG3C5lstUDR0p16T2+e4cG/qfzWNlsKo7pvBlVVO2W2CyR2GKSeVsMEb5JXnJrGNzJ5BTfCuA5Ke6Ut4uWjHU050ooo9btYI887N51a+amNlsNBZ4tCjgDHEZPkdre/mf02LaAAbAqXU9RlYnGtYRe6TpyqanN5YaMmgFcoirCzCIiAIiIAiIgCIiAIiIDFzA7xVdYv6K7bdOsqbNo26tOZ0Gj7CQ8Wjs82/gVY6LZVbOp5g8GMoqSwyvMIdFtrtGhU3TRuVaMiNNuUMZ9lu88T+AVgtYGrJEstna8zeT2MVFYQREWs9CIiA6poI5WOY9rXMcMnNcMwRxChV9wDBO8y2qQUrydcT8zH4bxy1jkp0i21X2UvMGabqK7liayRnD+D6C1aMzh5TVDX10o1NPst3c9Z4qStaBz71yixssnZLdN5ZnXXCuO2CwgiIsDMIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgP/9k=" alt="Logo BK TPHCM" class="img-fluid" style="max-width: 120px;">
+        </div>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="nguyenvana@gmail.com" value="nguyenvana@gmail.com" required>
+            </div>
+
+            <div class="mb-3 password-input-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control border-danger" id="password" value="••••••••••" required>
+                <span class="input-group-text-custom" id="togglePassword">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#888" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588M5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829z"/>
+                        <path d="M13.596 8.525a1.5 1.5 0 0 1-2.121 2.121l-9.19-9.191zm1.47-1.471a.5.5 0 0 1 0-.708l-1.471-1.47a.5.5 0 0 1 .708-.707l1.47 1.47a.5.5 0 0 1 0 .708z"/>
+                    </svg>
+                </span>
+            </div>
+
+            <a href="forgot_password.html" class="forgot-password text-primary text-decoration-none">Quên mật khẩu?</a>
+
+            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+
+        togglePassword.addEventListener('click', function (e) {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (email === "" || password === "") {
+                alert('Vui lòng nhập đầy đủ Email và Mật khẩu.');
+                return;
+            }
+
+            console.log('Đang gửi thông tin đăng nhập:');
+            console.log('Email:', email);
+            console.log('Mật khẩu:', password);
+
+            window.location.href = 'index.html';
+        });
+    </script>
+
+</body>
+</html>

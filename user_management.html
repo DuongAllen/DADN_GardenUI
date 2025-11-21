@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Người Dùng | Responsive</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        /* =====================================
+           CSS CHUNG VÀ DESKTOP (d-md-block)
+           ===================================== */
+        body { background-color: #f8f9fa; }
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+        }
+        .main-content { padding: 20px 30px; }
+        .title { color: #0000FF; font-size: 1.8rem; font-weight: 700; }
+        .btn-add-user { background-color: #0000FF; border-color: #0000FF; font-weight: 500; }
+        .table-responsive { background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+        .table thead th { color: #6c757d; font-weight: 600; cursor: pointer; }
+        .action-dots { cursor: pointer; font-size: 1.2rem; color: #6c757d; }
+        
+        /* =====================================
+           CSS MOBILE (d-block / d-none)
+           ===================================== */
+        .mobile-header { padding: 15px 20px; border-bottom: 1px solid #eee; }
+        .mobile-title { color: #0000FF; font-size: 1.5rem; font-weight: 700; margin-left: 15px; }
+        .mobile-toolbar { padding: 15px 20px 5px; }
+        .user-list-item { border-bottom: 1px solid #eee; padding: 15px 20px; cursor: pointer; }
+        .user-name { font-weight: 600; font-size: 1rem; }
+        .expand-icon { color: #6c757d; font-size: 1rem; transition: transform 0.3s ease; }
+        .mobile-pagination { display: flex; justify-content: center; align-items: center; padding: 15px 20px; border-top: 1px solid #eee; }
+        
+        /* Modal chung */
+        .modal-body .form-control { border-radius: 8px; height: 45px; }
+        .btn-modal-add, .btn-modal-save { background-color: #0000FF; border-color: #0000FF; font-weight: 600; padding: 10px 30px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    
+    <div class="d-none d-md-flex">
+        <div class="sidebar">
+            <h5 class="text-center mb-4">BK TPHCM Admin</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white active" href="#"><i class="bi bi-people me-2"></i> Quản lý Người dùng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="#"><i class="bi bi-gear me-2"></i> Cài đặt</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content flex-grow-1">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="title">Quản lý người dùng</h1>
+                <button class="btn btn-primary btn-add-user" data-bs-toggle="modal" data-bs-target="#addEditUserModal" onclick="prepareAddUser()">
+                    <i class="bi bi-plus-lg me-1"></i> Thêm người dùng
+                </button>
+            </div>
+
+            <div class="d-flex justify-content-start mb-4">
+                <div class="input-group" style="max-width: 300px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0" placeholder="Tra cứu">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 5%;">#</th>
+                            <th scope="col" style="width: 30%;">Name <i class="bi bi-arrow-up text-primary"></i></th>
+                            <th scope="col" style="width: 30%;">Email</th>
+                            <th scope="col" style="width: 25%;">SDT</th>
+                            <th scope="col" style="width: 10%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        </tbody>
+                </table>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="pagination-info">
+                    Đang hiển thị <span id="start_entry_d">1</span> - <span id="end_entry_d">5</span> của <span id="total_entries_d">12</span> mục
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="desktopPagination">
+                        </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="d-md-none">
+        
+        <div class="mobile-header">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-list fs-3"></i>
+                <h1 class="mobile-title">Quản lý người dùng</h1>
+            </div>
+        </div>
+
+        <div class="mobile-toolbar">
+            <div class="d-flex justify-content-between align-items-center">
+                <input type="text" class="form-control me-2 search-input" placeholder="Tra cứu">
+                <button class="btn btn-primary btn-add-user" data-bs-toggle="modal" data-bs-target="#addEditUserModal" onclick="prepareAddUser()">
+                    <i class="bi bi-plus-lg me-1"></i> Thêm người dùng
+                </button>
+            </div>
+        </div>
+
+        <div id="userListMobile">
+            </div>
+        
+        <div class="mobile-pagination">
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item"><a class="page-link page-control" href="#" onclick="changePage(-1)"><i class="bi bi-chevron-left"></i></a></li>
+                    <li class="page-item page-info d-flex align-items-center mx-2">
+                        <span id="current_page_m">1</span> of <span id="total_pages_m">3</span>
+                    </li>
+                    <li class="page-item"><a class="page-link page-control" href="#" onclick="changePage(1)"><i class="bi bi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="addEditUserModal" tabindex="-1" aria-labelledby="addEditUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <h5 class="modal-title mb-4" id="addEditUserModalLabel">Thêm người dùng mới</h5>
+                    <form id="addEditUserForm">
+                        <input type="hidden" id="userIdHidden">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Tên</label>
+                            <input type="text" class="form-control" id="userName" placeholder="Nguyễn Văn A" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="userEmail" required>
+                            <div class="form-text text-danger d-none" id="emailError">Email đã tồn tại.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userPhone" class="form-label">SĐT</label>
+                            <input type="tel" class="form-control" id="userPhone" required>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-modal-save" id="saveButton">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        let userData = [
+            { id: 1, name: 'Nguyễn Văn A', email: 'nguyenvana@gmail.com', phone: '0901234567' },
+            { id: 2, name: 'Lê Quang B', email: 'lequangb@gmail.com', phone: '0901234567' },
+            { id: 3, name: 'Đào Văn C', email: 'daovanc@gmail.com', phone: '0901234567' },
+            { id: 4, name: 'Vũ Quang M', email: 'vuquangm@gmail.com', phone: '0901234567' },
+            { id: 5, name: 'Trần Thị P', email: 'tranthip@gmail.com', phone: '0901234567' },
+            { id: 6, name: 'Phạm Thanh S', email: 'phams@gmail.com', phone: '0901234567' },
+            { id: 7, name: 'Hoàng Minh T', email: 'hoangminht@gmail.com', phone: '0901234567' },
+            { id: 8, name: 'Ngô Việt H', email: 'ngovieth@gmail.com', phone: '0901234567' },
+            { id: 9, name: 'Bùi Văn K', email: 'buivank@gmail.com', phone: '0901234567' },
+            { id: 10, name: 'Lý Quốc V', email: 'lyquocv@gmail.com', phone: '0901234567' },
+            { id: 11, name: 'Đặng Thanh L', email: 'dangthanhl@gmail.com', phone: '0901234567' },
+            { id: 12, name: 'Nguyễn Trọng T', email: 'nguyentrongt@gmail.com', phone: '0817727460' },
+        ];
+        
+        const rowsPerPage = 5;
+        let currentPage = 1;
+
+        // =====================================
+        // CHỨC NĂNG CHUNG (CỦA MODAL)
+        // =====================================
+
+        function prepareAddUser() {
+            document.getElementById('addEditUserModalLabel').textContent = 'Thêm người dùng mới';
+            document.getElementById('saveButton').textContent = 'Thêm';
+            document.getElementById('userIdHidden').value = '';
+            document.getElementById('addEditUserForm').reset();
+            document.getElementById('userEmail').classList.remove('border-danger');
+            document.getElementById('emailError').classList.add('d-none');
+        }
+
+        function prepareEditUser(userId) {
+            const user = userData.find(u => u.id === userId);
+            if (!user) return;
+
+            document.getElementById('addEditUserModalLabel').textContent = 'Chỉnh sửa người dùng';
+            document.getElementById('saveButton').textContent = 'Lưu thay đổi';
+            document.getElementById('userIdHidden').value = user.id;
+            
+            document.getElementById('userName').value = user.name;
+            document.getElementById('userEmail').value = user.email;
+            document.getElementById('userPhone').value = user.phone;
+
+            document.getElementById('userEmail').classList.remove('border-danger');
+            document.getElementById('emailError').classList.add('d-none');
+
+            // Mở Modal (dùng cho hành động từ Dropdown Desktop)
+            const modalElement = document.getElementById('addEditUserModal');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+        
+        function deleteUser(userId) {
+            if (confirm(`Bạn có chắc chắn muốn xóa người dùng ID: ${userId} không?`)) {
+                const initialLength = userData.length;
+                userData = userData.filter(u => u.id !== userId);
+
+                if (userData.length < initialLength) {
+                    alert('Đã xóa người dùng thành công.');
+                    // Điều chỉnh trang hiện tại nếu trang cuối bị xóa hết
+                    const totalPages = Math.ceil(userData.length / rowsPerPage);
+                    if (currentPage > totalPages) {
+                        currentPage = totalPages || 1;
+                    }
+                    renderAllViews(userData, currentPage);
+                }
+            }
+        }
+
+        document.getElementById('addEditUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('userIdHidden').value;
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const phone = document.getElementById('userPhone').value;
+            
+            // Xử lý logic Thêm/Sửa
+            if (id) {
+                // SỬA (EDIT)
+                const index = userData.findIndex(u => u.id === parseInt(id));
+                if (index !== -1) {
+                    userData[index].name = name;
+                    userData[index].email = email;
+                    userData[index].phone = phone;
+                    alert(`Đã cập nhật người dùng: ${name}`);
+                }
+            } else {
+                // THÊM MỚI (ADD)
+                const newId = userData.length > 0 ? Math.max(...userData.map(u => u.id)) + 1 : 1;
+                const newUser = { id: newId, name: name, email: email, phone: phone };
+                
+                // Giả lập lỗi email đã tồn tại (nếu email nhập là 'trươngtruong0301@gmail.com')
+                if (email === 'trươngtruong0301@gmail.com' && name !== 'Nguyễn Trọng T') {
+                    document.getElementById('userEmail').classList.add('border-danger');
+                    document.getElementById('emailError').classList.remove('d-none');
+                    return;
+                }
+
+                userData.push(newUser);
+                alert(`Đã thêm người dùng: ${name}`);
+            }
+
+            renderAllViews(userData, currentPage);
+            
+            const modalElement = document.getElementById('addEditUserModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+        });
+
+
+        // =====================================
+        // HÀM HIỂN THỊ CHUNG
+        // =====================================
+        
+        function renderAllViews(data, page) {
+            renderDesktopTable(data, page);
+            renderMobileList(data, page);
+        }
+        
+        // =====================================
+        // CHỨC NĂNG MOBILE
+        // =====================================
+
+        const userListMobile = document.getElementById('userListMobile');
+        const totalPagesMobile = document.getElementById('total_pages_m');
+        const currentPageMobile = document.getElementById('current_page_m');
+
+        function renderMobileList(data, page) {
+            userListMobile.innerHTML = '';
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = data.slice(start, end);
+
+            paginatedData.forEach(user => {
+                const collapseId = `details-m-${user.id}`; 
+                const item = document.createElement('div');
+                item.className = 'user-list-item';
+                
+                item.innerHTML = `
+                    <div class="main-info">
+                        <div class="d-flex align-items-center justify-content-between w-100" 
+                             data-bs-toggle="collapse" 
+                             data-bs-target="#${collapseId}"
+                             aria-expanded="false" 
+                             aria-controls="${collapseId}">
+                            
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-chevron-right expand-icon me-2" id="icon-m-${user.id}" style="transition: transform 0.3s ease;"></i>
+                                <i class="bi bi-person-circle fs-5 me-2"></i>
+                                <span class="user-name">${user.name}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapse user-details" id="${collapseId}">
+                        <p class="mb-1 ms-4">Email: <span class="fw-bold">${user.email}</span></p>
+                        <p class="mb-2 ms-4">SĐT: <span class="fw-bold">${user.phone}</span></p>
+                        
+                        <div class="ms-4 d-flex gap-2">
+                             <button class="btn btn-sm btn-outline-primary" onclick="prepareEditUser(${user.id})">
+                                <i class="bi bi-pencil"></i> Sửa
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${user.id})">
+                                <i class="bi bi-trash"></i> Xóa
+                            </button>
+                        </div>
+                    </div>
+                `;
+                userListMobile.appendChild(item);
+            });
+
+            userListMobile.querySelectorAll('.user-list-item').forEach(item => {
+                const collapseElement = item.querySelector('.collapse');
+                const userId = collapseElement.id.replace('details-m-', '');
+                const iconElement = document.getElementById(`icon-m-${userId}`);
+
+                collapseElement.addEventListener('show.bs.collapse', () => {
+                    if (iconElement) {
+                        iconElement.style.transform = 'rotate(90deg)';
+                    }
+                });
+
+                collapseElement.addEventListener('hide.bs.collapse', () => {
+                    if (iconElement) {
+                        iconElement.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+            
+            const totalPages = Math.ceil(data.length / rowsPerPage);
+            totalPagesMobile.textContent = totalPages;
+            currentPageMobile.textContent = page;
+        }
+
+        function changePage(direction) {
+            const totalPages = Math.ceil(userData.length / rowsPerPage);
+            let newPage = currentPage + direction;
+            
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                renderAllViews(userData, currentPage);
+            }
+        }
+        
+        // =====================================
+        // CHỨC NĂNG DESKTOP
+        // =====================================
+
+        const tableBody = document.getElementById('userTableBody');
+        const startEntryD = document.getElementById('start_entry_d');
+        const endEntryD = document.getElementById('end_entry_d');
+        const totalEntriesD = document.getElementById('total_entries_d');
+        const desktopPagination = document.getElementById('desktopPagination');
+
+        function renderDesktopTable(data, page) {
+            tableBody.innerHTML = '';
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = data.slice(start, end);
+
+            paginatedData.forEach((user, index) => {
+                const row = tableBody.insertRow();
+                const globalIndex = start + index + 1;
+
+                row.innerHTML = `
+                    <td>${globalIndex}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-circle fs-4 me-2"></i>
+                            ${user.name}
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td>
+                        <div class="dropdown">
+                            <i class="bi bi-three-dots action-dots" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="prepareEditUser(${user.id})"><i class="bi bi-pencil me-2"></i> Chỉnh sửa</a></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteUser(${user.id})"><i class="bi bi-trash me-2"></i> Xóa</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                `;
+            });
+            
+            startEntryD.textContent = start + 1;
+            endEntryD.textContent = Math.min(end, data.length);
+            totalEntriesD.textContent = data.length;
+            
+            renderDesktopPaginationLinks(data.length, page);
+        }
+        
+        function renderDesktopPaginationLinks(totalItems, currentPage) {
+            desktopPagination.innerHTML = '';
+            const totalPages = Math.ceil(totalItems / rowsPerPage);
+
+            const createPageLink = (page, text, isActive = false, isDisabled = false) => {
+                const li = document.createElement('li');
+                li.className = `page-item ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}`;
+                
+                const a = document.createElement('a');
+                a.className = 'page-link';
+                a.href = '#';
+                a.innerHTML = text;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    if (!isDisabled && !isActive) {
+                        setPage(page);
+                    }
+                };
+                li.appendChild(a);
+                return li;
+            };
+
+            desktopPagination.appendChild(createPageLink(currentPage - 1, '<i class="bi bi-chevron-left"></i>', false, currentPage === 1));
+
+            for (let i = 1; i <= totalPages; i++) {
+                desktopPagination.appendChild(createPageLink(i, i, i === currentPage));
+            }
+
+            desktopPagination.appendChild(createPageLink(currentPage + 1, '<i class="bi bi-chevron-right"></i>', false, currentPage === totalPages));
+        }
+
+        function setPage(page) {
+            currentPage = page;
+            renderAllViews(userData, currentPage);
+        }
+        
+        // =====================================
+        // KHỞI TẠO
+        // =====================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllViews(userData, currentPage);
+        });
+    </script>
+
+</body>
+</html>

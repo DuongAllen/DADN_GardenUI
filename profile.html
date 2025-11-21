@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thông tin người dùng - BK HCM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar p-2">
+    <div class="d-flex align-items-center w-100">
+      <a href="index.html" class="btn btn-link me-3">← Quay lại</a>
+      <h5 class="mb-0">Thông tin người dùng</h5>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body text-center">
+            <img src="assets/user_icon.png" alt="avatar" class="rounded-circle mb-3" style="width:110px;height:110px;object-fit:cover;">
+            <h4 id="userName" class="card-title">Nguyễn Văn A</h4>
+            <p class="text-muted mb-4">Sinh viên / Khoa CNTT</p>
+
+            <ul class="list-group list-group-flush text-start mb-3">
+              <li class="list-group-item"><strong>Email:</strong> <span id="userEmail">nv.a@example.com</span></li>
+              <li class="list-group-item"><strong>SĐT:</strong> <span id="userPhone">+84 912 345 678</span></li>
+              <li class="list-group-item"><strong>Địa chỉ:</strong> <span id="userAddress">123 Đường ABC, Q1, TP.HCM</span></li>
+            </ul>
+
+            <div class="d-flex justify-content-center gap-2">
+              <button id="editBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Chỉnh sửa</button>
+              <button id="logoutBtn" class="btn btn-outline-secondary">Đăng xuất</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal chỉnh sửa -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form id="editForm">
+                <div class="modal-header">
+                  <h5 class="modal-title">Chỉnh sửa thông tin</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Họ và tên</label>
+                    <input id="editName" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input id="editEmail" type="email" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">SĐT</label>
+                    <input id="editPhone" class="form-control">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input id="editAddress" class="form-control">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                  <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // Dữ liệu mẫu — thay bằng fetch nếu cần
+    const user = {
+      name: 'Nguyễn Văn A',
+      email: 'nv.a@example.com',
+      phone: '+84 912 345 678',
+      address: '123 Đường ABC, Q1, TP.HCM'
+    };
+
+    function renderUser() {
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('userEmail').textContent = user.email;
+      document.getElementById('userPhone').textContent = user.phone;
+      document.getElementById('userAddress').textContent = user.address;
+
+      document.getElementById('editName').value = user.name;
+      document.getElementById('editEmail').value = user.email;
+      document.getElementById('editPhone').value = user.phone;
+      document.getElementById('editAddress').value = user.address;
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      user.name = document.getElementById('editName').value;
+      user.email = document.getElementById('editEmail').value;
+      user.phone = document.getElementById('editPhone').value;
+      user.address = document.getElementById('editAddress').value;
+      renderUser();
+      const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+      modal.hide();
+    });
+
+    // Kiểm tra token khi mở trang — nếu không có token -> về login
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.Auth || !Auth.getToken()) {
+        // Không có token -> về trang đăng nhập
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Nếu có token, hiển thị thông tin
+      renderUser();
+
+      // Gắn handler cho nút đăng xuất: xóa token, ẩn thông tin và chuyển về login
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          Auth.removeToken();
+          // ẩn nhanh nội dung (nếu cần) trước khi chuyển trang
+          document.getElementById('userName').textContent = '';
+          const list = document.querySelector('.list-group');
+          if (list) list.innerHTML = '';
+          // chuyển về trang đăng nhập
+          window.location.href = 'login.html';
+        });
+      }
+    });
+
+    fetch('header.html')
+      .then(res => res.text())
+      .then(html => {
+        const container = document.getElementById('siteHeader');
+        if (!container) return;
+        container.innerHTML = html;
+
+        // avatar -> profile.html (chỉ chuyển khi chưa ở profile)
+        const avatar = document.getElementById('profileAvatar');
+        if (avatar) {
+          avatar.addEventListener('click', (e) => {
+            const href = 'profile.html';
+            const loc = window.location.href || window.location.pathname;
+            // nếu đã ở profile thì không điều hướng nữa
+            if (loc.endsWith(href) || loc.includes('/' + href) || loc.indexOf(href) !== -1) {
+              e.preventDefault();
+              return;
+            }
+            window.location.href = href;
+          });
+        }
+
+        // mobile menu toggle (nếu dùng)
+        const toggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (toggle && mobileMenu) {
+          toggle.addEventListener('click', () => mobileMenu.classList.toggle('show'));
+        }
+      })
+      .catch(err => console.error('Load header failed:', err));
+  </script>
+</body>
+</html>
