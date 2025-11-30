@@ -57,6 +57,31 @@ body {
   text-underline-offset: 4px;
 }
 
+/* Admin menu highlight */
+#adminMenuLink {
+  position: relative;
+  background: rgba(255, 165, 0, 0.3) !important;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#adminMenuLink:hover {
+  background: rgba(255, 165, 0, 0.5) !important;
+}
+
+/* User name display */
+#userNameDisplay {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .nav-right img {
   width: 38px;
   height: 38px;
@@ -137,6 +162,10 @@ main {
     flex-shrink: 0;
   }
 
+  #userNameDisplay {
+    display: none;
+  }
+
   .site-title {
     display: none;
   }
@@ -145,4 +174,17 @@ main {
     from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
   }
+}
+
+/* Make the "Quay lại" (back) button black in the profile header */
+.navbar.p-2 .btn-link {
+  color: #000 !important;
+  text-decoration: none !important;
+}
+
+.navbar.p-2 .btn-link:hover,
+.navbar.p-2 .btn-link:focus {
+  color: #000 !important;
+  text-decoration: underline !important;
+  background: transparent !important;
 }

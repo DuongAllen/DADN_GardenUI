@@ -1,0 +1,117 @@
+<div class="d-none d-md-flex">
+    <div class="main-content flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="title">Quản lý người dùng</h1>
+            <button class="btn btn-primary btn-add-user" data-bs-toggle="modal" data-bs-target="#addEditUserModal"
+                onclick="prepareAddUser()">
+                <i class="bi bi-plus-lg me-1"></i> Thêm người dùng
+            </button>
+        </div>
+
+        <div class="d-flex justify-content-start mb-4">
+            <div class="input-group" style="max-width: 300px;">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control border-start-0" placeholder="Tra cứu">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 5%;">#</th>
+                        <th scope="col" style="width: 30%;">Name <i class="bi bi-arrow-up text-primary"></i></th>
+                        <th scope="col" style="width: 30%;">Email</th>
+                        <th scope="col" style="width: 25%;">SDT</th>
+                        <th scope="col" style="width: 10%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="pagination-info">
+                Đang hiển thị <span id="start_entry_d">1</span> - <span id="end_entry_d">5</span> của <span
+                    id="total_entries_d">12</span> mục
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0" id="desktopPagination">
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+<div class="d-md-none">
+
+    <div class="mobile-header">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-list fs-3"></i>
+            <h1 class="mobile-title">Quản lý người dùng</h1>
+        </div>
+    </div>
+
+    <div class="mobile-toolbar">
+        <div class="d-flex justify-content-between align-items-center">
+            <input type="text" class="form-control me-2 search-input" placeholder="Tra cứu">
+            <button class="btn btn-primary btn-add-user" data-bs-toggle="modal" data-bs-target="#addEditUserModal"
+                onclick="prepareAddUser()">
+                <i class="bi bi-plus-lg me-1"></i> Thêm người dùng
+            </button>
+        </div>
+    </div>
+
+    <div id="userListMobile">
+    </div>
+
+    <div class="mobile-pagination">
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item"><a class="page-link page-control" href="#" onclick="changePage(-1)"><i
+                            class="bi bi-chevron-left"></i></a></li>
+                <li class="page-item page-info d-flex align-items-center mx-2">
+                    <span id="current_page_m">1</span> of <span id="total_pages_m">3</span>
+                </li>
+                <li class="page-item"><a class="page-link page-control" href="#" onclick="changePage(1)"><i
+                            class="bi bi-chevron-right"></i></a></li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+<div class="modal fade" id="addEditUserModal" tabindex="-1" aria-labelledby="addEditUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <h5 class="modal-title mb-4" id="addEditUserModalLabel">Thêm người dùng mới</h5>
+                <form id="addEditUserForm">
+                    <input type="hidden" id="userIdHidden">
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="userName" placeholder="Nguyễn Văn A" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" required>
+                        <div class="form-text text-danger d-none" id="emailError">Email đã tồn tại.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPhone" class="form-label">SĐT</label>
+                        <input type="tel" class="form-control" id="userPhone" required>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-modal-save" id="saveButton">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

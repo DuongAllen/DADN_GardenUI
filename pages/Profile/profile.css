@@ -1,0 +1,10 @@
+.navbar.p-2 .btn-link {
+  color: #000 !important;
+  text-decoration: none !important;
+}
+.navbar.p-2 .btn-link:hover,
+.navbar.p-2 .btn-link:focus {
+  color: #000 !important;
+  text-decoration: underline !important;
+  background: transparent !important;
+}

@@ -3,13 +3,24 @@ const pages = {
   'devices': 'pages/Devices/devices.html',
   'schedule': 'pages/Schedule/schedule.html',
   'threshold': 'pages/Threshold/threshold.html',
-  'profile': 'pages/Profile/profile.html'
+  'profile': 'pages/Profile/profile.html',
+  'user-management': 'pages/UsersManagement/users_management.html' 
 };
 
 let currentPageCleanup = null;
 
 async function loadPage(pagePath, routeName) {
   try {
+    // Kiểm tra quyền truy cập cho trang user-management
+    if (routeName === 'user-management') {
+      const userInfo = Auth.getUserInfo();
+      if (!userInfo || userInfo.role !== 'admin') {
+        alert('Bạn không có quyền truy cập trang này!');
+        window.location.hash = 'dashboard';
+        return;
+      }
+    }
+
     if (currentPageCleanup) {
       currentPageCleanup();
       currentPageCleanup = null;

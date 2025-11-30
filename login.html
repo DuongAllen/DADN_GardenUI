@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập | BK TPHCM</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Import auth.js -->
+    <script src="js/auth.js"></script>
+    
     <style>
         body {
             background-color: #f8f9fa;
@@ -63,24 +67,36 @@
         .password-input-group {
             position: relative;
         }
+
+        .demo-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+
+        .demo-info strong {
+            color: #1976d2;
+        }
     </style>
 </head>
 <body>
 
     <div class="login-container">
         <div class="logo">
-            <img src="data:image/jpeg;base64,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" alt="Logo BK TPHCM" class="img-fluid" style="max-width: 120px;">
+            <img src="data:image/jpeg;base64,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" alt="Logo BK TPHCM" class="img-fluid" style="max-width: 120px;">
         </div>
 
         <form id="loginForm">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="nguyenvana@gmail.com" value="nguyenvana@gmail.com" required>
+                <input type="email" class="form-control" id="email" placeholder="admin@example.com" value="nguyenvana@gmail.com" required>
             </div>
 
             <div class="mb-3 password-input-group">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control border-danger" id="password" value="••••••••••" required>
+                <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" value="123456" required>
                 <span class="input-group-text-custom" id="togglePassword">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#888" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                         <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588M5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
@@ -94,20 +110,37 @@
 
             <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
         </form>
+
+        <!-- Demo Info -->
+        <div class="demo-info">
+            <div><strong>🔐 Demo Accounts:</strong></div>
+            <div>👤 User: nguyenvana@gmail.com</div>
+            <div>👑 Admin: admin@example.com</div>
+            <div>🔑 Password: bất kỳ</div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
+        // Kiểm tra nếu đã đăng nhập -> redirect
+        document.addEventListener('DOMContentLoaded', function() {
+            if (Auth.isAuthenticated()) {
+                window.location.href = 'index.html';
+            }
+        });
+
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('password');
         const togglePassword = document.getElementById('togglePassword');
 
+        // Toggle hiện/ẩn password
         togglePassword.addEventListener('click', function (e) {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
         });
 
+        // Xử lý đăng nhập
         loginForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -119,11 +152,20 @@
                 return;
             }
 
-            console.log('Đang gửi thông tin đăng nhập:');
-            console.log('Email:', email);
-            console.log('Mật khẩu:', password);
-
-            window.location.href = 'index.html';
+            // Sử dụng Auth.login() từ auth.js
+            Auth.login(email, password, {
+                rememberMe: false,
+                onSuccess: (userInfo) => {
+                    console.log('Login successful:', userInfo);
+                    
+                    // Tất cả đều vào index.html
+                    // Admin sẽ thấy thêm menu "Quản lý người dùng"
+                    window.location.href = 'index.html';
+                },
+                onError: (error) => {
+                    alert('Đăng nhập thất bại! Vui lòng thử lại.');
+                }
+            });
         });
     </script>
 

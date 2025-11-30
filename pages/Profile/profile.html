@@ -1,1 +1,74 @@
-<h1>Trang cá nhân</h1>
+<header class="navbar p-2">
+    <div class="d-flex align-items-center w-100">
+        <a href="index.html" class="btn btn-link me-3">← Quay lại</a>
+        <h5 class="mb-0">Thông tin người dùng</h5>
+    </div>
+</header>
+
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="assets/user_icon.png" alt="avatar" class="rounded-circle mb-3"
+                        style="width:110px;height:110px;object-fit:cover;">
+                    <h4 id="userName" class="card-title">Nguyễn Văn A</h4>
+                    <p class="text-muted mb-4">Sinh viên / Khoa CNTT</p>
+
+                    <ul class="list-group list-group-flush text-start mb-3">
+                        <li class="list-group-item"><strong>Email:</strong> <span id="userEmail">nv.a@example.com</span>
+                        </li>
+                        <li class="list-group-item"><strong>SĐT:</strong> <span id="userPhone">+84 912 345 678</span>
+                        </li>
+                        <li class="list-group-item"><strong>Địa chỉ:</strong> <span id="userAddress">123 Đường ABC, Q1,
+                                TP.HCM</span></li>
+                    </ul>
+
+                    <div class="d-flex justify-content-center gap-2">
+                        <button id="editBtn" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#editModal">Chỉnh sửa</button>
+                        <button id="logoutBtn" class="btn btn-outline-secondary">Đăng xuất</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal chỉnh sửa -->
+            <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="editForm">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Chỉnh sửa thông tin</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Họ và tên</label>
+                                    <input id="editName" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input id="editEmail" type="email" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SĐT</label>
+                                    <input id="editPhone" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Địa chỉ</label>
+                                    <input id="editAddress" class="form-control">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
