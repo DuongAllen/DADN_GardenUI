@@ -7,6 +7,7 @@ body { background-color: #f8f9fa; }
             padding-top: 20px;
         }
         .main-content { padding: 20px 30px; }
+        .max-width-1400 { max-width: 1400px; width: 100%; margin: 0 auto; }
         .title { color: #0000FF; font-size: 1.8rem; font-weight: 700; }
         .btn-add-user { background-color: #0000FF; border-color: #0000FF; font-weight: 500; }
         .table-responsive { background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }

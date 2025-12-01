@@ -4,7 +4,7 @@ const pages = {
   'schedule': 'pages/Schedule/schedule.html',
   'threshold': 'pages/Threshold/threshold.html',
   'profile': 'pages/Profile/profile.html',
-  'user-management': 'pages/UsersManagement/users_management.html' 
+  'user-management': 'pages/UsersManagement/usersmanagement.html' 
 };
 
 let currentPageCleanup = null;
