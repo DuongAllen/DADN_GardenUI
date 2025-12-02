@@ -79,12 +79,14 @@
           <td>${user.email}</td>
           <td>${user.phone}</td>
           <td>
-            <div class="btn-group btn-group-sm">
-              <button class="btn btn-primary" onclick="prepareEditUser(${user.id})" title="Chỉnh sửa">
-                <img src="../../assets/edit.png" style="width:16px; height:16px; margin-top: -2px;">
+            <div class="action-buttons-group">
+              <button class="btn-action-edit" onclick="prepareEditUser(${user.id})" title="Chỉnh sửa">
+                <img src="../../assets/edit.png" alt="Chỉnh sửa">
+                <span>Sửa</span>
               </button>
-              <button class="btn btn-danger" onclick="showDeleteConfirm(${user.id}, '${user.name}')" title="Xóa">
-                <img src="../../assets/bin.png" style="width:16px; height:16px; margin-top: -2px;">
+              <button class="btn-action-delete" onclick="showDeleteConfirm(${user.id}, '${user.name}')" title="Xóa">
+                <img src="../../assets/bin.png" alt="Delete">
+                <span>Xóa</span>
               </button>
             </div>
           </td>
@@ -118,11 +120,13 @@
             </div>
             
             <div class="mobile-user-actions">
-              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); prepareEditUser(${user.id})">
-                <img src="../../assets/edit.png" style="width:14px; height:14px; margin-top: -4px;"> Sửa
+              <button class="btn-action-edit" onclick="event.stopPropagation(); prepareEditUser(${user.id})">
+                <img src="../../assets/edit.png" alt="Edit">
+                <span>Sửa</span>
               </button>
-              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); showDeleteConfirm(${user.id}, '${user.name}')">
-                <img src="../../assets/bin.png" style="width:14px; height:14px; margin-top: -4px;"> Xóa
+              <button class="btn-action-delete" onclick="event.stopPropagation(); showDeleteConfirm(${user.id}, '${user.name}')">
+                <img src="../../assets/bin.png" alt="Delete">
+                <span>Xóa</span>
               </button>
             </div>
           </div>

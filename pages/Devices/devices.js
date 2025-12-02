@@ -108,12 +108,14 @@
             <small class="text-muted">${thresholdSummary}</small>
           </td>
           <td>
-            <div class="btn-group btn-group-sm">
-              <button class="btn btn-primary" onclick="openThresholdModal(${d.id}, '${d.name}')" title="Thiết lập ngưỡng">
-                <img src="../../assets/cogwheel.png" style="width:16px; height:16px; margin-top: -2px;">
+            <div class="btn-action-buttons-group">
+              <button class="btn-action-settings" onclick="openThresholdModal(${d.id}, '${d.name}')" title="Thiết lập ngưỡng">
+                <img src="../../assets/settings.png" alt="Chỉnh sửa">
+                <span>Điều chỉnh</span>
               </button> 
-              <button class="btn btn-danger" onclick="showDeleteConfirm(${d.id}, '${d.name}')" title="Xóa">
-                <img src="../../assets/bin.png" style="width:16px; height:16px; margin-top: -2px;">
+              <button class="btn-action-delete" onclick="showDeleteConfirm(${d.id}, '${d.name}')" title="Xóa">
+                <img src="../../assets/bin.png" alt="Xóa">
+                <span>Xóa</span>
               </button>
             </div>
           </td>
@@ -140,7 +142,7 @@
             </div>
 
             <div class="threshold-summary">
-              <div class="threshold-summary-title"> <img src="../../assets/cogwheel.png" style="width:16px; height:16px; margin-top: -2px;"> Ngưỡng đã cấu hình:</div>
+              <div class="threshold-summary-title"> <img src="../../assets/settings.png" style="width:16px; height:16px; margin-top: -2px;"> Ngưỡng đã cấu hình:</div>
               ${hasConfig ? renderThresholdSummary(configs) : '<div class="no-threshold">Chưa thiết lập ngưỡng</div>'}
             </div>
 
@@ -154,15 +156,15 @@
                          onchange="toggleDevice(${d.id}, '${d.status}')">
                   <span class="toggle-slider"></span>
                 </label>
-              </div>
-              <button class="btn btn-primary btn-sm w-100" onclick="openThresholdModal(${d.id}, '${d.name}')">
-                ${hasConfig 
-                  ? '<img src="../../assets/edit.png" style="width:16px; height:16px; margin-top: -4px;"> Chỉnh sửa ngưỡng' 
-                  : '<img src="../../assets/cogwheel.png" style="width:16px; height:16px; margin-top: -4px;"> Thiết lập ngưỡng'}
-              </button>
-              <button class="btn btn-outline-danger btn-sm w-100" onclick="showDeleteConfirm(${d.id}, '${d.name}')">
-                <img src="../../assets/bin.png" style="width:16px; height:16px; margin-top: -4px;"> Xóa thiết bị
-              </button>
+              </div class="mobile-user-actions">
+                <button class="btn-action-settings" onclick="openThresholdModal(${d.id}, '${d.name}')">
+                  ${hasConfig 
+                    ? '<img src="../../assets/edit.png"> Chỉnh sửa ngưỡng' 
+                    : '<img src="../../assets/settings.png"> Thiết lập ngưỡng'}
+                </button>
+                <button class="btn-action-delete" onclick="showDeleteConfirm(${d.id}, '${d.name}')">
+                  <img src="../../assets/bin.png" style="width:16px; height:16px; margin-top: -4px;"> Xóa thiết bị
+                </button>
             </div>
           </div>
         </div>
